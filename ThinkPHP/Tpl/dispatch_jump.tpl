@@ -1,3 +1,8 @@
+<?php
+    if(C('LAYOUT_ON')) {
+        echo '{__NOLAYOUT__}';
+    }
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -16,16 +21,16 @@ body{ background: #fff; font-family: '微软雅黑'; color: #333; font-size: 16p
 </head>
 <body>
 <div class="system-message">
-<present name="message">
+<?php if(isset($message)) {?>
 <h1>:)</h1>
-<p class="success">{$message}</p>
-<else/>
+<p class="success"><?php echo($message); ?></p>
+<?php }else{?>
 <h1>:(</h1>
-<p class="error">{$error}</p>
-</present>
+<p class="error"><?php echo($error); ?></p>
+<?php }?>
 <p class="detail"></p>
 <p class="jump">
-页面自动 <a id="href" href="{$jumpUrl}">跳转</a> 等待时间： <b id="wait">{$waitSecond}</b>
+页面自动 <a id="href" href="<?php echo($jumpUrl); ?>">跳转</a> 等待时间： <b id="wait"><?php echo($waitSecond); ?></b>
 </p>
 </div>
 <script type="text/javascript">
@@ -33,8 +38,11 @@ body{ background: #fff; font-family: '微软雅黑'; color: #333; font-size: 16p
 var wait = document.getElementById('wait'),href = document.getElementById('href').href;
 var interval = setInterval(function(){
 	var time = --wait.innerHTML;
-	(time == 0) && (location.href = href);
-}, 1000);	
+	if(time <= 0) {
+		location.href = href;
+		clearInterval(interval);
+	};
+}, 1000);
 })();
 </script>
 </body>
